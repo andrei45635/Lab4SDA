@@ -38,7 +38,6 @@ void testAdauga() {
 	for (int i = 0; i <= 100; i++) {
 		lista.adaugaSfarsit(i);
 		lista.adauga(lista.dim() - 1, i);
-		cout << lista.elems[i] << " ";
 		try {
 			lista.adauga((i + 2) * 2, i);
 			assert(false);
@@ -52,16 +51,13 @@ void testAdauga() {
 	assert(it.element() == 1);
 	it.urmator();
 	int i = 0;
-	/*while (it.valid()) {
-		cout << "first " << i << " " << it.index << " " << it.element() << "\n";
+	while (it.valid() && i < lista.size/2) {
 		assert(it.element() == i);
 		it.urmator();
-		cout << "second " << i << " " << it.index << " " << it.element() << "\n";
 		assert(it.element() == i);
 		it.urmator();
-		cout << "third " << i << " " << it.index << " " << it.element() << "\n";
 		i++;
-	}*/
+	}
 	it.prim();
 	assert(it.valid());
 	assert(it.element() == 1);

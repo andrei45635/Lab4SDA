@@ -27,6 +27,12 @@ bool LI::vida() const {
 }
 
 void LI::check_if_resize() {
+	/*
+	* CF: 0(cap)
+	* CD: 0(cap)
+	* CM: 0(cap)
+	* CG: 0(cap)
+	*/
 	if (this->size >= this->cap) {
 		int newcap = 2 * this->cap + 1;
 		TElem* new_elems = new TElem[newcap];
@@ -55,20 +61,31 @@ TElem LI::element(int i) const {
 // arunca exceptie daca i nu e valid
 TElem LI::modifica(int i, TElem e) {
 	/* de adaugat */
+	/*
+	* CF: 0(1), daca e primul element
+	* CD: 0(this->size), daca e penultimul element
+	* CG: O(this->size)
+	* CM: O(this->size)
+	*/
 	if (i < 0 || i > this->size) {
 		throw std::exception("invalid\n");
 	}
 	else if (!vida()) {
 		IteratorLI it = this->iterator();
 		it.prim();
-		for (int i = 0; i < this->size; i++) {
+		for (int cnt = 0; cnt < this->size; cnt++) {
 			TElem current = it.element();
-			if (current == i) {
+			if (cnt == i) {
 				TElem old_val = elems[i];
 				elems[i] = e;
 				return old_val;
 			}
 			it.urmator();
+		}
+		if (i == this->size) {
+			TElem old_val = elems[this->size];
+			elems[this->size] = e;
+			return old_val;
 		}
 	}
 }
@@ -76,6 +93,12 @@ TElem LI::modifica(int i, TElem e) {
 // adaugare element la sfarsit
 void LI::adaugaSfarsit(TElem e) {
 	/* de adaugat */
+	/*
+	* CF: 0(1)
+	* CD: 0(1)
+	* CM: 0(1)
+	* CG: 0(1)
+	*/
 	check_if_resize();
 	this->elems[this->size] = e;
 	this->urm[this->elems[this->size]] = this->elems[e];
@@ -87,6 +110,12 @@ void LI::adaugaSfarsit(TElem e) {
 // arunca exceptie daca i nu e valid
 void LI::adauga(int i, TElem e) {
 	/* de adaugat */
+	/*
+	* CF: 0(1), elementul este pe prima pozitie
+	* CD: 0(this->size), elementul este pe penultima pozitie
+	* CM: O(this->size)
+	* CG: O(this->size)
+	*/
 	if (i < 0 || i > this->size) {
 		throw std::exception("invalid\n");
 	}
@@ -111,12 +140,21 @@ void LI::adauga(int i, TElem e) {
 		this->primLiber = this->urm[this->urm[i]];
 		this->size++;
 	}
+	else if (i == this->size) {
+		adaugaSfarsit(e);
+	}
 }
 
 // sterge element de pe o pozitie i si returneaza elementul sters
 // arunca exceptie daca i nu e valid
 TElem LI::sterge(int i) {
 	/* de adaugat */
+	/*
+	* CF: 0(1), elementul este pe prima pozitie
+	* CD: 0(this->size), elementul este pe ultima pozitie
+	* CM: O(this->size)
+	* CG: O(this->size)
+	*/
 	if (i < 0 || i >= this->size) {
 		throw std::exception("invalid\n");
 	}
@@ -133,10 +171,16 @@ TElem LI::sterge(int i) {
 // cauta element si returneaza prima pozitie pe care apare (sau -1)
 int LI::cauta(TElem e) const {
 	/* de adaugat */
+	/*
+	* CF: 0(1), elementul este pe prima pozitie
+	* CD: 0(this->size), elementul este pe ultima pozitie
+	* CM: O(this->size)
+	* CG: O(this->size)
+	*/
 	if (!vida()) {
 		IteratorLI it = this->iterator();
 		it.prim();
-		while (it.valid()) {
+		for (int cnt = 0; cnt <= this->size; cnt++) {
 			TElem current = it.element();
 			if (current == e) {
 				return it.index;
